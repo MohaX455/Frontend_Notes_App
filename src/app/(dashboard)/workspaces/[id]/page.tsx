@@ -80,8 +80,8 @@ export default function WorkspaceDetailPage({ params }: WorkspaceDetailPageProps
         return (
             <div className="p-8">
                 <div className="animate-pulse space-y-4">
-                    <div className="h-10 w-72 rounded bg-muted/20" />
-                    <div className="h-5 w-96 rounded bg-muted/20" />
+                    <div className="h-10 w-72 rounded-lg bg-muted/20" />
+                    <div className="h-5 w-96 rounded-lg bg-muted/20" />
                 </div>
             </div>
         );
@@ -101,12 +101,12 @@ export default function WorkspaceDetailPage({ params }: WorkspaceDetailPageProps
     }
 
     return (
-        <div className="p-6 lg:p-8">
-            <div className="mb-8">
+        <div className="p-4 mx-auto">
+            <div className="mb-6">
                 <h1 className="text-3xl font-display font-bold text-primary mb-2">
                     {workspace.name}
                 </h1>
-                <p className="text-muted">
+                <p className="text-muted max-w-2xl">
                     A clean space to create, edit and manage your notes inside this workspace.
                 </p>
             </div>
@@ -116,9 +116,8 @@ export default function WorkspaceDetailPage({ params }: WorkspaceDetailPageProps
                 </div>
             )}
 
-            <div className="grid min-h-[calc(100vh-192px)] gap-6 lg:grid-cols-[350px_minmax(0,1fr)]">
+            <div className="grid gap-6 lg:grid-cols-[minmax(300px,360px)_minmax(0,1fr)]">
                 <NoteList
-                    workspaceName={workspace.name}
                     notes={notes}
                     selectedNoteId={selectedNoteId}
                     isLoading={isNotesLoading}

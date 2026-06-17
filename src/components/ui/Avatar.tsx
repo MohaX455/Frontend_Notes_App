@@ -21,7 +21,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
             <div
                 ref={ref}
                 className={cn(
-                    "flex items-center justify-center rounded-full bg-accent text-white font-semibold leading-none",
+                    "flex items-center justify-center rounded-lg bg-accent text-white font-semibold leading-none",
                     sizeMap[size],
                     className
                 )}

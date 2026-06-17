@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { Folders, Plus, Menu, X } from "lucide-react";
+import { Folders, Plus, X } from "lucide-react";
 import { useWorkspaces } from "@/hooks/useWorkspaces";
 import { Logo, Button } from "@/components/ui";
 import { UserMenu } from "@/components/shared/UserMenu";
@@ -12,13 +11,14 @@ import { cn } from "@/lib/utils";
 
 interface SidebarProps {
     className?: string;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
-export const Sidebar = ({ className }: SidebarProps) => {
+export const Sidebar = ({ className, isOpen, onClose }: SidebarProps) => {
     const router = useRouter();
     const pathname = usePathname();
     const { data: workspaces = [], isLoading } = useWorkspaces();
-    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     const isActive = (path: string) => pathname === path;
 
@@ -35,6 +35,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
                 <div className="mb-8">
                     <Link
                         href="/workspaces"
+                        onClick={onClose}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                             isActive("/workspaces")
@@ -57,7 +58,10 @@ export const Sidebar = ({ className }: SidebarProps) => {
                             variant="outline"
                             size="sm"
                             className="h-6 w-6 p-0 hover:bg-accent/10"
-                            onClick={() => router.push("/workspaces/new")}
+                            onClick={() => {
+                                router.push("/workspaces/new");
+                                onClose();
+                            }}
                         >
                             <Plus className="w-4 h-4" />
                         </Button>
@@ -66,7 +70,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
                     {isLoading ? (
                         <div className="space-y-2">
                             {[...Array(3)].map((_, i) => (
-                                <div key={i} className="h-8 bg-muted/20 rounded animate-pulse" />
+                                <div key={i} className="h-8 bg-muted/20 rounded-lg animate-pulse" />
                             ))}
                         </div>
                     ) : workspaces.length === 0 ? (
@@ -77,6 +81,7 @@ export const Sidebar = ({ className }: SidebarProps) => {
                                 key={workspace.id}
                                 workspace={workspace}
                                 isActive={isActive(`/workspaces/${workspace.id}`)}
+                                onNavigate={onClose}
                             />
                         ))
                     )}
@@ -92,45 +97,40 @@ export const Sidebar = ({ className }: SidebarProps) => {
 
     return (
         <>
-            {/* Mobile Menu Button */}
-            <button
-                onClick={() => setIsMobileOpen(true)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-surface rounded-lg border border-muted/20 shadow-sm"
-            >
-                <Menu className="w-5 h-5" />
-            </button>
-
             {/* Desktop Sidebar */}
             <aside className={cn(
-                "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-64 lg:h-screen lg:border-r lg:border-muted/10 lg:bg-surface lg:z-30",
+                "hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:h-screen lg:border-r lg:border-muted/10 lg:bg-surface lg:z-30",
                 className
             )}>
                 <SidebarContent />
             </aside>
 
-            {/* Mobile Sidebar */}
-            {isMobileOpen && (
-                <>
-                    {/* Overlay */}
-                    <div
-                        className="lg:hidden fixed inset-0 bg-black/50 z-40"
-                        onClick={() => setIsMobileOpen(false)}
-                    />
+            {/* Mobile overlay & sidebar (animated) */}
+            <div
+                className={cn(
+                    "lg:hidden fixed inset-0 z-[100] transition-opacity duration-300",
+                    isOpen ? "opacity-100 pointer-events-auto bg-black/50" : "opacity-0 pointer-events-none"
+                )}
+                onClick={onClose}
+            />
 
-                    {/* Sidebar */}
-                    <aside className="lg:hidden fixed inset-y-0 left-0 w-64 bg-surface border-r border-muted/10 z-50 transform transition-transform duration-200 ease-in-out">
-                        <div className="absolute top-4 right-4">
-                            <button
-                                onClick={() => setIsMobileOpen(false)}
-                                className="p-2 rounded-lg hover:bg-muted/10"
-                            >
-                                <X className="w-5 h-5" />
-                            </button>
-                        </div>
-                        <SidebarContent />
-                    </aside>
-                </>
-            )}
+            <aside
+                className={cn(
+                    "lg:hidden fixed inset-y-0 left-0 w-72 max-w-xs bg-surface border-r border-muted/10 z-[110] shadow-2xl transform transition-transform duration-300 ease-in-out",
+                    isOpen ? "translate-x-0" : "-translate-x-full"
+                )}
+            >
+                <div className="absolute top-4 right-4">
+                    <button
+                        onClick={onClose}
+                        className="p-2 rounded-lg hover:bg-muted/10"
+                        aria-label="Close menu"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                </div>
+                <SidebarContent />
+            </aside>
         </>
     );
 };

@@ -16,7 +16,7 @@ export default function LoginPage() {
             </Link>
 
             {/* Login Card */}
-            <div className="bg-primary-foreground rounded-xl shadow-xl border border-muted/10 p-8 w-full max-w-md">
+            <div className="bg-primary-foreground rounded-lg shadow-xl border border-muted/10 p-8 w-full max-w-md">
                 <div className="text-center mb-8">
                     <h1 className="text-3xl font-display font-bold text-primary mb-2">
                         Welcome back

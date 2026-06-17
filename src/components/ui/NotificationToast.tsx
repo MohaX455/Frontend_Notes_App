@@ -46,7 +46,7 @@ export const NotificationToast = () => {
     }
 
     return (
-        <div className="pointer-events-none fixed right-4 top-4 z-[10000] flex w-full max-w-sm flex-col gap-3">
+        <div className="pointer-events-none fixed inset-x-4 top-4 z-[10000] flex flex-col gap-3 items-center sm:items-end">
             {notifications.map((notification) => {
                 const style = typeStyles[notification.type];
                 const Icon = style.icon;
@@ -68,7 +68,7 @@ export const NotificationToast = () => {
                             <button
                                 type="button"
                                 onClick={() => removeNotification(notification.id)}
-                                className="rounded p-1 transition-colors hover:bg-black/5"
+                                className="rounded-lg p-1 transition-colors hover:bg-black/5"
                                 aria-label="Dismiss notification"
                             >
                                 <X className="h-4 w-4" />

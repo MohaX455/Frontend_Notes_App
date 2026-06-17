@@ -13,9 +13,10 @@ import { Workspace } from "@/types";
 interface WorkspaceItemProps {
     workspace: Workspace;
     isActive: boolean;
+    onNavigate?: () => void;
 }
 
-export const WorkspaceItem = ({ workspace, isActive }: WorkspaceItemProps) => {
+export const WorkspaceItem = ({ workspace, isActive, onNavigate }: WorkspaceItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(workspace.name);
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
@@ -74,7 +75,7 @@ export const WorkspaceItem = ({ workspace, isActive }: WorkspaceItemProps) => {
                     onChange={(e) => setEditValue(e.target.value)}
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
-                    className="w-full bg-surface border border-accent/30 rounded px-2 py-1 text-sm text-primary focus:outline-none focus:border-accent"
+                    className="w-full bg-surface border border-accent/30 rounded-lg px-2 py-1 text-sm text-primary focus:outline-none focus:border-accent"
                     maxLength={50}
                 />
             </div>
@@ -92,6 +93,7 @@ export const WorkspaceItem = ({ workspace, isActive }: WorkspaceItemProps) => {
                             ? "bg-accent/10 text-accent border border-accent/20"
                             : "text-muted hover:text-primary border border-surface"
                     )}
+                    onClick={() => onNavigate?.()}
                 >
                     <span className="truncate">{workspace.name}</span>
                 </Link>
@@ -102,7 +104,7 @@ export const WorkspaceItem = ({ workspace, isActive }: WorkspaceItemProps) => {
                         trigger={
                             <button
                                 className={cn(
-                                    "p-1 rounded transition-colors hover:bg-muted/10",
+                                    "p-1 rounded-lg transition-colors hover:bg-muted/10",
                                     "opacity-0 pointer-events-none",
                                     "group-hover:opacity-100 group-hover:pointer-events-auto",
                                     isMenuOpen && "opacity-100 pointer-events-auto bg-muted/10"

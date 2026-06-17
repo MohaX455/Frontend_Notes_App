@@ -87,11 +87,11 @@ export const NoteEditor = ({ workspaceId, note, isLoading, onCreateNote, onDelet
 
     if (isLoading) {
         return (
-            <div className="rounded-[32px] border border-muted/10 bg-surface p-6 h-full">
+            <div className="rounded-lg border border-muted/10 bg-surface p-6 h-full">
                 <div className="space-y-4">
                     <div className="h-12 w-3/4 rounded-lg bg-muted/20 animate-pulse" />
                     <div className="h-10 rounded-lg bg-muted/20 animate-pulse" />
-                    <div className="h-[420px] rounded-[28px] bg-muted/20 animate-pulse" />
+                    <div className="h-[420px] rounded-lg bg-muted/20 animate-pulse" />
                 </div>
             </div>
         );
@@ -99,7 +99,7 @@ export const NoteEditor = ({ workspaceId, note, isLoading, onCreateNote, onDelet
 
     if (!activeNote) {
         return (
-            <div className="rounded-[32px] border border-muted/10 bg-surface p-8 h-full flex flex-col items-center justify-center text-center gap-4">
+            <div className="rounded-lg border border-muted/10 bg-surface p-8 h-full flex flex-col items-center justify-center text-center gap-4">
                 <Sparkles className="w-10 h-10 text-accent" />
                 <div>
                     <h2 className="text-2xl font-semibold text-primary mb-2">Your writing space is ready</h2>
@@ -107,7 +107,7 @@ export const NoteEditor = ({ workspaceId, note, isLoading, onCreateNote, onDelet
                         Create a new note and keep your ideas flowing in a calm, focused editor.
                     </p>
                 </div>
-                <Button variant="outline" onClick={onCreateNote} className="px-5 py-2">
+                <Button variant="outline" onClick={onCreateNote} className="rounded-lg px-5 py-2">
                     New note
                 </Button>
             </div>
@@ -116,7 +116,7 @@ export const NoteEditor = ({ workspaceId, note, isLoading, onCreateNote, onDelet
 
     return (
         <>
-            <section className="flex h-full flex-col rounded-[32px] border border-muted/10 bg-surface p-6 shadow-sm">
+            <section className="flex h-full flex-col rounded-lg border border-muted/10 bg-surface p-6 shadow-sm">
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                         <div className="flex items-center gap-2 mb-3 text-sm font-medium text-muted uppercase tracking-[0.2em]">
@@ -146,7 +146,7 @@ export const NoteEditor = ({ workspaceId, note, isLoading, onCreateNote, onDelet
                     </div>
                 </div>
 
-                <div className="flex-1 min-h-[420px] overflow-hidden rounded-[28px] border border-muted/10 bg-white/80 p-4 shadow-sm">
+                <div className="flex-1 min-h-[280px] sm:min-h-[420px] overflow-hidden rounded-lg border border-muted/10 bg-white/80 p-4 shadow-sm focus-within:ring-2 focus-within:ring-accent/10">
                     <textarea
                         value={content}
                         onChange={(event) => setContent(event.target.value)}

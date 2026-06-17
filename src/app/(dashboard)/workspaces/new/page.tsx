@@ -28,7 +28,7 @@ export default function NewWorkspacePage() {
     };
 
     return (
-        <div className="p-8 max-w-2xl mx-auto">
+        <div className="p-4 max-w-3xl mx-auto">
             {/* Header */}
             <div className="mb-8">
                 <Button
@@ -50,7 +50,7 @@ export default function NewWorkspacePage() {
             </div>
 
             {/* Form */}
-            <div className="bg-surface rounded-lg border border-muted/10 p-8">
+            <div className="">
                 {formError && (
                     <div className="mb-4">
                         <Alert type="error">{formError}</Alert>
@@ -70,7 +70,7 @@ export default function NewWorkspacePage() {
                             className="w-full"
                             autoFocus
                         />
-                        <p className="text-xs text-muted mt-1">
+                        <p className="text-xs text-muted mt-2">
                             Choose a descriptive name for your workspace
                         </p>
                     </div>
@@ -81,7 +81,7 @@ export default function NewWorkspacePage() {
                             disabled={!name.trim() || createWorkspace.isPending}
                             className="flex-1"
                         >
-                            {createWorkspace.isPending ? "Creating..." : "Create Workspace"}
+                            {createWorkspace.isPending ? "Creating..." : "Create"}
                         </Button>
                         <Button
                             type="button"

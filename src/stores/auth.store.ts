@@ -41,23 +41,19 @@ export const useAuthStore = create<AuthStore>((set) => ({
     },
 
     setRefreshToken: (token) => {
-        if (typeof window !== "undefined") {
-            localStorage.setItem("refreshToken", token);
-        }
         set({ refreshToken: token });
     },
 
     setAuth: (user, accessToken, refreshToken) => {
         if (typeof window !== "undefined") {
             localStorage.setItem("accessToken", accessToken);
-            localStorage.setItem("refreshToken", refreshToken);
             // Set cookie for middleware
             document.cookie = `accessToken=${accessToken}; path=/; max-age=86400; samesite=strict`;
         }
         set({
             user,
             accessToken,
-            refreshToken,
+            refreshToken: refreshToken || null,
             isAuthenticated: true,
         });
     },
@@ -65,7 +61,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
     clearAuth: () => {
         if (typeof window !== "undefined") {
             localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
             // Clear client-side access token cookie with matching attributes.
             document.cookie =
                 "accessToken=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; samesite=strict";
@@ -86,7 +81,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
         if (typeof window === "undefined") return;
 
         const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
         const userStr = localStorage.getItem("user");
 
         let user: User | null = null;
@@ -103,7 +97,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             set({
                 user,
                 accessToken,
-                refreshToken: refreshToken || "",
+                refreshToken: null,
                 isAuthenticated: true,
                 isLoading: false,
             });

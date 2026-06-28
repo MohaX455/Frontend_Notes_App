@@ -88,7 +88,7 @@ export const WorkspaceItem = ({ workspace, isActive, onNavigate }: WorkspaceItem
                 <Link
                     href={`/workspaces/${workspace.id}`}
                     className={cn(
-                        "flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors truncate pr-8",
+                        "flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors truncate pr-10 md:pr-8",
                         isActive
                             ? "bg-accent/10 text-accent border border-accent/20"
                             : "text-muted hover:text-primary border border-surface"
@@ -105,8 +105,8 @@ export const WorkspaceItem = ({ workspace, isActive, onNavigate }: WorkspaceItem
                             <button
                                 className={cn(
                                     "p-1 rounded-lg transition-colors hover:bg-muted/10",
-                                    "opacity-0 pointer-events-none",
-                                    "group-hover:opacity-100 group-hover:pointer-events-auto",
+                                    "opacity-100 pointer-events-auto",
+                                    "md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto",
                                     isMenuOpen && "opacity-100 pointer-events-auto bg-muted/10"
                                 )}
                             >

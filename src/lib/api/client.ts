@@ -8,6 +8,60 @@ type RetryableRequestConfig = InternalAxiosRequestConfig & {
     _retry?: boolean;
 };
 
+const isAuthEndpoint = (url?: string) => {
+    if (!url) {
+        return false;
+    }
+
+    return [
+        API_ENDPOINTS.auth.login,
+        API_ENDPOINTS.auth.register,
+        API_ENDPOINTS.auth.refresh,
+        API_ENDPOINTS.auth.logout,
+    ].some((endpoint) => url.includes(endpoint));
+};
+
+let refreshPromise: Promise<string> | null = null;
+
+const refreshAccessToken = async (): Promise<string> => {
+    if (refreshPromise) {
+        return refreshPromise;
+    }
+
+    refreshPromise = (async () => {
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}${API_ENDPOINTS.auth.refresh}`,
+                {},
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            const newAccessToken = response.data?.token?.access_token;
+
+            if (!newAccessToken) {
+                throw new Error("No access token returned by refresh endpoint");
+            }
+
+            useAuthStore.getState().setAccessToken(newAccessToken);
+            return newAccessToken;
+        } catch (error) {
+            if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("auth:refresh-failed"));
+            }
+            throw error;
+        } finally {
+            refreshPromise = null;
+        }
+    })();
+
+    return refreshPromise;
+};
+
 const createApiClient = (): AxiosInstance => {
     const client = axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
@@ -21,9 +75,13 @@ const createApiClient = (): AxiosInstance => {
     client.interceptors.request.use(
         (config) => {
             const accessToken = useAuthStore.getState().accessToken;
-            if (accessToken) {
+            const isAuthRequest = isAuthEndpoint(config.url);
+
+            if (accessToken && !isAuthRequest) {
+                config.headers = config.headers ?? {};
                 config.headers.Authorization = `Bearer ${accessToken}`;
             }
+
             return config;
         },
         (error) => {
@@ -39,46 +97,25 @@ const createApiClient = (): AxiosInstance => {
         async (error: AxiosError) => {
             const originalRequest = error.config as RetryableRequestConfig | undefined;
 
-            // Only retry once and only on 401
+            // Only retry once and only on 401 for non-auth endpoints
             if (
                 error.response?.status === 401 &&
                 originalRequest &&
-                !originalRequest._retry
+                !originalRequest._retry &&
+                !isAuthEndpoint(originalRequest.url) &&
+                useAuthStore.getState().isAuthenticated
             ) {
                 originalRequest._retry = true;
 
                 try {
-                    // Attempt to refresh the token (cookie will be sent automatically)
-                    const response = await axios.post(
-                        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}${API_ENDPOINTS.auth.refresh}`,
-                        {},
-                        {
-                            withCredentials: true,
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    );
+                    const newAccessToken = await refreshAccessToken();
 
-                    const newAccessToken = response.data.token.access_token;
-
-                    // Update the store with new access token
-                    useAuthStore.getState().setAccessToken(newAccessToken);
-
-                    // Update the authorization header for the original request
-                    if (originalRequest) {
+                    if (originalRequest.headers) {
                         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                     }
 
-                    // Retry the original request with new token
                     return client(originalRequest);
                 } catch (refreshError) {
-                    // Refresh failed - clear auth and redirect to login
-                    console.warn("Token refresh failed, clearing authentication:", refreshError);
-                    useAuthStore.getState().clearAuth();
-                    if (typeof window !== "undefined") {
-                        window.location.href = "/login";
-                    }
                     return Promise.reject(refreshError);
                 }
             }

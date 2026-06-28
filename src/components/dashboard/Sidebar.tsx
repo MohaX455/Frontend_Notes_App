@@ -35,6 +35,7 @@ export const Sidebar = ({ className, isOpen = false, onClose = () => { } }: Side
                 <div className="mb-8">
                     <Link
                         href="/workspaces"
+                        onClick={() => onClose?.()}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                             isActive("/workspaces")
@@ -57,7 +58,10 @@ export const Sidebar = ({ className, isOpen = false, onClose = () => { } }: Side
                             variant="outline"
                             size="sm"
                             className="h-6 w-6 p-0 hover:bg-accent/10"
-                            onClick={() => router.push("/workspaces/new")}
+                            onClick={() => {
+                                onClose?.();
+                                router.push("/workspaces/new");
+                            }}
                         >
                             <Plus className="w-4 h-4" />
                         </Button>
@@ -78,6 +82,7 @@ export const Sidebar = ({ className, isOpen = false, onClose = () => { } }: Side
                                     key={workspace.id}
                                     workspace={workspace}
                                     isActive={isActive(`/workspaces/${workspace.id}`)}
+                                    onNavigate={onClose}
                                 />
                             ))
                         )}

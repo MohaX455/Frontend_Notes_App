@@ -101,7 +101,7 @@ export default function WorkspaceDetailPage({ params }: WorkspaceDetailPageProps
     }
 
     return (
-        <div className="p-4 mx-auto">
+        <div className="p-4 mx-auto flex h-[calc(100vh-5rem)] max-w-[1600px] flex-col">
             <div className="mb-6">
                 <h1 className="text-3xl font-display font-bold text-primary mb-2">
                     {workspace.name}
@@ -116,21 +116,23 @@ export default function WorkspaceDetailPage({ params }: WorkspaceDetailPageProps
                 </div>
             )}
 
-            <div className="grid gap-6 lg:grid-cols-[minmax(300px,360px)_minmax(0,1fr)]">
-                <NoteList
-                    notes={notes}
-                    selectedNoteId={selectedNoteId}
-                    isLoading={isNotesLoading}
-                    onSelectNote={setSelectedNoteId}
-                    onCreateNote={handleCreateNote}
-                />
-                <NoteEditor
-                    workspaceId={workspaceId}
-                    note={selectedNote}
-                    isLoading={isNotesLoading && !selectedNote}
-                    onCreateNote={handleCreateNote}
-                    onDeleteNote={handleDeleteNote}
-                />
+            <div className="flex-1 min-h-0">
+                <div className="grid gap-6 lg:grid-cols-[minmax(300px,360px)_minmax(0,1fr)] h-full">
+                    <NoteList
+                        notes={notes}
+                        selectedNoteId={selectedNoteId}
+                        isLoading={isNotesLoading}
+                        onSelectNote={setSelectedNoteId}
+                        onCreateNote={handleCreateNote}
+                    />
+                    <NoteEditor
+                        workspaceId={workspaceId}
+                        note={selectedNote}
+                        isLoading={isNotesLoading && !selectedNote}
+                        onCreateNote={handleCreateNote}
+                        onDeleteNote={handleDeleteNote}
+                    />
+                </div>
             </div>
         </div>
     );

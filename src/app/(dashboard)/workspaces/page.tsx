@@ -1,35 +1,17 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Folder } from "lucide-react";
-import { useWorkspaces, useCreateWorkspace } from "@/hooks/useWorkspaces";
-import { Button, Alert } from "@/components/ui";
+import { useWorkspaces } from "@/hooks/useWorkspaces";
+import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
-import { normalizeApiError } from "@/lib/errors/api-error";
 
 export default function WorkspacesPage() {
     const router = useRouter();
     const { data: workspaces = [], isLoading } = useWorkspaces();
-    const createWorkspace = useCreateWorkspace();
-    const [showCreateForm, setShowCreateForm] = useState(false);
-    const [newWorkspaceName, setNewWorkspaceName] = useState("");
-    const [formError, setFormError] = useState<string | null>(null);
 
-    const handleCreateWorkspace = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!newWorkspaceName.trim()) return;
-
-        try {
-            const workspace = await createWorkspace.mutateAsync({ name: newWorkspaceName.trim() });
-            setNewWorkspaceName("");
-            setShowCreateForm(false);
-            setFormError(null);
-            router.push(`/workspaces/${workspace.id}`);
-        } catch (error) {
-            const normalizedError = normalizeApiError(error);
-            setFormError(normalizedError.message);
-        }
+    const navigateToNewWorkspace = () => {
+        router.push("/workspaces/new");
     };
 
     if (isLoading) {
@@ -60,71 +42,13 @@ export default function WorkspacesPage() {
                     </p>
                 </div>
 
-                <Button
-                    onClick={() => setShowCreateForm(true)}
-                    className="inline-flex items-center gap-2"
-                >
-                    <Plus className="w-4 h-4" />
-                    New Workspace
-                </Button>
+                {workspaces.length > 0 && (
+                    <Button onClick={navigateToNewWorkspace} className="inline-flex items-center gap-2">
+                        <Plus className="w-4 h-4" />
+                        New Workspace
+                    </Button>
+                )}
             </div>
-
-            {/* Create Workspace Form */}
-            {showCreateForm && (
-                <div className="mb-8 rounded-lg border border-muted/10 bg-surface p-4 shadow-sm sm:p-6">
-                    <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-                        <div>
-                            <h3 className="text-lg font-semibold mb-2">Create New Workspace</h3>
-                            <p className="text-sm text-muted max-w-xl">
-                                Add a new workspace and begin organizing notes in a dedicated space.
-                            </p>
-                        </div>
-                        {/* header cancel removed — use the cancel next to Create instead */}
-                    </div>
-                    {formError && (
-                        <div className="mt-6">
-                            <Alert type="error">{formError}</Alert>
-                        </div>
-                    )}
-                    <form onSubmit={handleCreateWorkspace} className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end">
-                        <div className="flex-1 min-w-0">
-                            <label htmlFor="workspace-name" className="block text-sm font-medium text-primary mb-2">
-                                Workspace name
-                            </label>
-                            <input
-                                id="workspace-name"
-                                type="text"
-                                value={newWorkspaceName}
-                                onChange={(e) => setNewWorkspaceName(e.target.value)}
-                                placeholder="Workspace name"
-                                className="w-full rounded-lg border border-muted/20 bg-white/80 px-4 py-3 text-sm text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/10"
-                                autoFocus
-                            />
-                        </div>
-                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                            <Button
-                                type="submit"
-                                disabled={!newWorkspaceName.trim() || createWorkspace.isPending}
-                                className="w-full sm:w-auto"
-                            >
-                                {createWorkspace.isPending ? "Creating..." : "Create"}
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => {
-                                    setShowCreateForm(false);
-                                    setNewWorkspaceName("");
-                                    setFormError(null);
-                                }}
-                                className="w-full sm:w-auto"
-                            >
-                                Cancel
-                            </Button>
-                        </div>
-                    </form>
-                </div>
-            )}
 
             {/* Workspaces Grid */}
             {workspaces.length === 0 ? (
@@ -136,7 +60,7 @@ export default function WorkspacesPage() {
                     <p className="mx-auto mb-6 max-w-md text-muted">
                         Create your first workspace to start organizing your notes and ideas.
                     </p>
-                    <Button onClick={() => setShowCreateForm(true)} className="inline-flex items-center gap-2">
+                    <Button onClick={navigateToNewWorkspace} className="inline-flex items-center gap-2">
                         <Plus className="w-4 h-4" />
                         Create Workspace
                     </Button>

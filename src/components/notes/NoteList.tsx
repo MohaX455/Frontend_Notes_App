@@ -68,7 +68,7 @@ export const NoteList = ({ notes, selectedNoteId, isLoading, onSelectNote, onCre
                 />
             </div>
 
-            <div className="flex-1 overflow-y-auto pr-1 min-h-[320px]">
+            <div className="flex-1 min-h-0 overflow-y-auto pr-1 min-h-[320px] custom-scrollbar">
                 {isLoading ? (
                     <div className="space-y-4">
                         {[...Array(5)].map((_, index) => (
@@ -81,9 +81,6 @@ export const NoteList = ({ notes, selectedNoteId, isLoading, onSelectNote, onCre
                         <p className="text-sm text-muted mb-5 max-w-xs">
                             Use the search above or create a new note to get started.
                         </p>
-                        <Button variant="outline" onClick={onCreateNote} className="rounded-lg px-4 py-2">
-                            Create first note
-                        </Button>
                     </div>
                 ) : (
                     <div className="space-y-3">

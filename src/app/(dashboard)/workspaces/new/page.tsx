@@ -69,6 +69,7 @@ export default function NewWorkspacePage() {
                             placeholder="Enter workspace name"
                             className="w-full"
                             autoFocus
+                            disabled={createWorkspace.isPending}
                         />
                         <p className="text-xs text-muted mt-2">
                             Choose a descriptive name for your workspace

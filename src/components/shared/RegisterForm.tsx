@@ -82,6 +82,7 @@ export const RegisterForm = () => {
                 {...register("username")}
                 error={errors.username?.message}
                 hint="3-30 characters, letters, numbers, underscores only"
+                disabled={isSubmitting}
             />
 
             <Input
@@ -90,6 +91,7 @@ export const RegisterForm = () => {
                 placeholder="you@example.com"
                 {...register("email")}
                 error={errors.email?.message}
+                disabled={isSubmitting}
             />
 
             <Input
@@ -99,6 +101,7 @@ export const RegisterForm = () => {
                 {...register("password")}
                 error={errors.password?.message}
                 hint="Min 8 chars: uppercase, lowercase, number"
+                disabled={isSubmitting}
             />
 
             <Input
@@ -107,6 +110,7 @@ export const RegisterForm = () => {
                 placeholder="••••••••"
                 {...register("confirmPassword")}
                 error={errors.confirmPassword?.message}
+                disabled={isSubmitting}
             />
 
             <Button

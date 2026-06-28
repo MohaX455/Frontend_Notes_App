@@ -59,6 +59,7 @@ export const LoginForm = () => {
                 placeholder="you@example.com"
                 {...register("email")}
                 error={errors.email?.message}
+                disabled={isSubmitting}
             />
 
             <Input
@@ -67,6 +68,7 @@ export const LoginForm = () => {
                 placeholder="••••••••"
                 {...register("password")}
                 error={errors.password?.message}
+                disabled={isSubmitting}
             />
 
             <Button

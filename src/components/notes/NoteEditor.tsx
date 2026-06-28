@@ -108,7 +108,7 @@ export const NoteEditor = ({ workspaceId, note, isLoading, onCreateNote, onDelet
                     </p>
                 </div>
                 <Button variant="outline" onClick={onCreateNote} className="rounded-lg px-5 py-2">
-                    New note
+                    Create first note
                 </Button>
             </div>
         );

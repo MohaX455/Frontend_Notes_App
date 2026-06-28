@@ -1,165 +1,104 @@
 # Notes App Frontend
 
-A modern Notes application built with Next.js 14+, TypeScript, Tailwind CSS, and powered by React Query and Zustand.
+A Next.js frontend for a workspace-based notes application. The UI includes authentication, workspace management, and note editing.
 
-## Project Structure
+## Overview
 
-```
-src/
-├── app/                        # Next.js App Router
-│   ├── (auth)/                 # Route group — pages publiques
-│   │   ├── login/
-│   │   │   └── page.tsx
-│   │   └── register/
-│   │       └── page.tsx
-│   ├── (dashboard)/            # Route group — pages protégées
-│   │   ├── layout.tsx
-│   │   ├── workspaces/
-│   │   │   └── page.tsx
-│   │   └── workspaces/[id]/
-│   │       └── page.tsx
-│   ├── layout.tsx              # Root layout
-│   └── page.tsx                # Redirect vers /workspaces ou /login
-│
-├── components/
-│   ├── ui/                     # Composants primitifs réutilisables
-│   └── shared/                 # Composants métier partagés
-│
-├── lib/
-│   ├── api/
-│   │   ├── client.ts           # Instance axios configurée avec interceptors
-│   │   └── endpoints.ts        # Toutes les URLs d'API centralisées
-│   ├── auth/
-│   │   └── tokens.ts           # Helpers get/set/clear tokens
-│   └── utils.ts                # Utilitaires génériques (cn, formatDate…)
-│
-├── hooks/                      # Custom hooks (useAuth, …)
-├── stores/                     # Zustand stores (authStore)
-├── types/                      # Interfaces et types TypeScript globaux
-│   ├── auth.types.ts
-│   ├── workspace.types.ts
-│   └── note.types.ts
-└── middleware.ts               # Protection des routes Next.js
-```
+The frontend is built with Next.js App Router, TypeScript, Tailwind CSS, React Query, and Zustand. It communicates with the backend API using Axios and handles access token refresh automatically.
 
-## Design System
+## Tech stack
 
-### Colors
-- **Primary**: `#1A1A2E` (bleu nuit profond) — fonds principaux
-- **Accent**: `#4F46E5` (indigo) — CTA, liens actifs
-- **Surface**: `#F8F8FC` (blanc cassé froid) — fonds de cartes
-- **Muted**: `#6B7280` (gris neutre) — textes secondaires
+| Layer | Technology |
+| --- | --- |
+| Framework | Next.js 14 |
+| UI | React 18, Tailwind CSS |
+| Data | React Query, Axios |
+| State | Zustand |
+| Forms | React Hook Form, Zod |
+| Tooling | TypeScript, ESLint |
 
-## Installation
+## Key features
 
-```bash
-# Install dependencies
-npm install
+- login and registration views
+- authenticated dashboard routes
+- workspace list and workspace detail pages
+- note list and editor experience
+- global auth state with Zustand
+- Axios interceptors for bearer tokens and refresh handling
+- protected routes using `middleware.ts`
 
-# Set up environment variables
-# .env.local is already configured with NEXT_PUBLIC_API_URL=http://localhost:8000
+## Frontend structure
 
-# Start development server
-npm run dev
+- `src/app/` — pages and layouts
+- `src/components/` — UI and dashboard components
+- `src/hooks/` — data and auth hooks using React Query
+- `src/lib/api/` — Axios client and endpoint definitions
+- `src/lib/auth/` — auth service and storage helpers
+- `src/stores/` — Zustand stores for auth and notifications
+- `src/types/` — shared TypeScript models
+- `src/middleware.ts` — route protection
 
-# Build for production
-npm run build
+## Environment
 
-# Start production server
-npm start
-```
-
-## Dependencies
-
-- **React 19** - UI library
-- **Next.js 14** - React framework with App Router
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Utility-first CSS framework
-- **Axios** - HTTP client with interceptors
-- **Zustand** - State management
-- **React Query** - Server state management
-- **React Hook Form** - Form state management
-- **Zod** - Schema validation
-- **Lucide React** - Icon library
-- **clsx & tailwind-merge** - CSS class utilities
-
-## Key Features
-
-### Authentication
-- Login/Register pages
-- Token-based authentication with access/refresh tokens
-- Automatic token refresh on 401 responses
-- Middleware-based route protection
-- Zustand store for auth state management
-
-### API Integration
-- Centralized API endpoints configuration
-- Axios client with request/response interceptors
-- Automatic Bearer token injection
-- Automatic refresh token handling
-- Error handling and redirect on auth failure
-
-### Route Protection
-- Public routes: `/(auth)/login`, `/(auth)/register`
-- Protected routes: `/(dashboard)/*`
-- Automatic redirects based on auth state
-- Middleware-based validation
-
-## Available Scripts
-
-- `npm run dev` - Start dev server (http://localhost:3000)
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run type-check` - Check TypeScript types
-
-## Environment Variables
+Create a `.env.local` file with:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-## TypeScript Strict Mode
+## Run locally
 
-This project is configured with strict TypeScript settings:
-- `strict: true`
-- `noUncheckedIndexedAccess: true`
-- `noImplicitReturns: true`
-- `noFallthroughCasesInSwitch: true`
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-No `any` types are allowed in this project.
+## Available scripts
 
-## Next Steps
+- `npm run dev` — Start development server
+- `npm run build` — Build production app
+- `npm start` — Start production server
+- `npm run lint` — Run ESLint
+- `npm run type-check` — Run TypeScript checks
 
-1. Implement login/register forms with React Hook Form + Zod
-2. Implement workspaces list/detail pages
-3. Implement notes CRUD operations
-4. Add UI components (Button, Input, Card, etc.)
-5. Add React Query integration for API calls
-6. Add loading/error states and user feedback
-7. Implement responsive design
+## API integration
 
-## API Endpoints
-
-The frontend consumes the following FastAPI endpoints:
+The frontend calls these backend endpoints:
 
 ### Auth
-- `POST /auth/register` - Register new user
-- `POST /auth/login` - Login user
-- `POST /auth/refresh` - Refresh access token
-- `GET /auth/me` - Get current user
-- `POST /auth/logout` - Logout user
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/refresh`
+- `POST /auth/logout`
+- `GET /auth/me`
 
 ### Workspaces
-- `POST /api/workspace` - Create workspace
-- `GET /api/workspaces` - List user workspaces
-- `GET /api/workspace/:id` - Get workspace details
-- `PUT /api/workspace/:id` - Update workspace
-- `DELETE /api/workspace/:id` - Delete workspace
+- `GET /api/workspaces`
+- `POST /api/workspace`
+- `GET /api/workspace/:id`
+- `PUT /api/workspace/:id`
+- `DELETE /api/workspace/:id`
 
 ### Notes
-- `POST /api/notes` - Create note
-- `GET /api/notes?workspace_id=:id` - List notes in workspace
-- `GET /api/notes/:id` - Get note details
-- `PUT /api/notes/:id` - Update note
-- `DELETE /api/notes/:id` - Delete note
+- `GET /api/notes?workspace_id=:id`
+- `POST /api/notes`
+- `GET /api/notes/:id`
+- `PUT /api/notes/:id`
+- `DELETE /api/notes/:id`
+
+## Dependencies
+
+- `next`
+- `react`
+- `react-dom`
+- `typescript`
+- `tailwindcss`
+- `@tanstack/react-query`
+- `axios`
+- `react-hook-form`
+- `zod`
+- `zustand`
+- `lucide-react`
+- `clsx`
+- `tailwind-merge`

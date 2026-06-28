@@ -43,7 +43,9 @@ export const LoginForm = () => {
                 setError("password", { type: "server", message: fieldErrors.password });
             }
 
-            setApiError(normalizedError.message);
+            if (!fieldErrors?.email && !fieldErrors?.password) {
+                setApiError(normalizedError.message);
+            }
         }
     };
 

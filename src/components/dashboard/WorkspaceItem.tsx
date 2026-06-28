@@ -104,10 +104,11 @@ export const WorkspaceItem = ({ workspace, isActive, onNavigate }: WorkspaceItem
                         trigger={
                             <button
                                 className={cn(
-                                    "p-1 rounded-lg transition-colors hover:bg-muted/10",
+                                    "p-1 rounded-lg transition-colors md:hover:bg-muted/10",
                                     "opacity-100 pointer-events-auto",
                                     "md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto",
-                                    isMenuOpen && "opacity-100 pointer-events-auto bg-muted/10"
+                                    isMenuOpen &&
+                                    "opacity-100 pointer-events-auto bg-muted/10 md:opacity-100 md:pointer-events-auto"
                                 )}
                             >
                                 <MoreHorizontal className="w-4 h-4" />

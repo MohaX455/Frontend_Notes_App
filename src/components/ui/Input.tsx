@@ -23,7 +23,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         error
                             ? "border-red-500 focus:ring-2 focus:ring-red-200"
                             : "border-muted focus:border-accent focus:ring-2 focus:ring-accent/10",
-                        "focus:outline-none",
+                        "focus:outline-none disabled:cursor-not-allowed",
                         className
                     )}
                     {...props}
